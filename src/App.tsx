@@ -5,7 +5,7 @@ const App = () => {
   return (
     <>
       <header>
-        <h1>Laberinto Vive Sin Drogas</h1>
+        <h1>Resolución de Laberinto</h1>
         <ul>
           <li>
             <button>Generar Laberinto</button>

@@ -5,23 +5,92 @@ import flowers from '../assets/flowers.png'
 import './maze.css'
 import Cell from './Cell'
 
+interface Node {
+	x: number
+	y: number
+}
+
 const Maze = () => {
 
 	const [x, setX] = useState(0)
+	const [y, setY] = useState(0)
 	const [maze, setMaze] = useState<CellGen[][]>([])
 
+	const start = { x: 0, y: 0 }
+	const end = { x: 14, y: 14 }
+
+
 	useEffect(() => {
-		setInterval(() => {
-			setX(x => x + 1)
-		}, 10)
-		setMaze(generateMaze(10, 10))
+		setMaze(generateMaze(15, 15))
+
+		setTimeout(() => bfs(start, end, updatePosition), 1000)
 	}, [])
+
+	function updatePosition(x: number, y: number) {
+		setX(x * 48)
+		setY(y * 48)
+	  }
+
+	function bfs(
+		start: Node,
+		end: Node,
+		updatePosition: (x: number, y: number) => void
+	  ): Node[] | null {
+		const queue: Node[] = [start];
+		const visited: Set<string> = new Set();
+		const parents: Record<string, Node> = {};
+	  
+		function visitNeighbor() {
+		  const current = queue.shift()!;
+		  if (current.x === end.x && current.y === end.y) {
+			// reconstruir el camino
+			const path: Node[] = [end];
+			let node = end;
+			while (node.x !== start.x || node.y !== start.y) {
+			  node = parents[`${node.x},${node.y}`];
+			  path.unshift(node);
+			}
+			return path;
+		  }
+		  const neighbors: Node[] = [];
+		  if (!maze[current.y][current.x].topWall) {
+			neighbors.push({ x: current.x, y: current.y - 1 });
+		  }
+		  if (!maze[current.y][current.x].rightWall) {
+				neighbors.push({ x: current.x, y: current.y - 1});
+		  }
+		  if (!maze[current.y][current.x].bottomWall) {
+				neighbors.push({ x: current.x, y: current.y - 1});
+		  }
+		  if (!maze[current.y][current.x].leftWall) {
+				neighbors.push({ x: current.x, y: current.y - 1});
+		  }
+		  for (const neighbor of neighbors) {
+			const key = `${neighbor.x},${neighbor.y}`;
+			if (!visited.has(key)) {
+			  queue.push(neighbor);
+			  visited.add(key);
+			  parents[key] = current;
+			}
+		  }
+		  if (queue.length > 0) {
+			console.log(current.x, current.y);
+			updatePosition(current.x, current.y);
+			setTimeout(visitNeighbor, 500);
+		  }
+		}
+	  
+		visited.add(`${start.x},${start.y}`);
+		setTimeout(visitNeighbor, 500);
+	  
+		return null;
+	  }
 
 	return (
 		<section id='maze'>
 			<Stage
-				width={1280 - 8}
-				height={620 - 8}
+				width={720}
+				height={720}
 				options={{
 					backgroundAlpha: 0
 				}}
@@ -29,27 +98,28 @@ const Maze = () => {
 				<Container>
 					<Sprite
 						image={bee}
-						scale={{ x: 0.15, y: 0.15 }}
+						scale={{ x: 0.08, y: 0.08 }}
 						x={x}
-						y={150}
+						y={y}
 					/>
 					<Sprite
 						image={flowers}
-						scale={{ x: 0.15, y: 0.15 }}
-						x={0}
-						y={350}
+						scale={{ x: 0.08, y: 0.08 }}
+						x={14 * 48}
+						y={14 * 48}
 					/>
 					{
 						maze.map((row, y) => {
 							return row.map((cell, x) => {
 								return <Cell
 									key={`${x}-${y}`}
-									x={x * 50}
-									y={y * 50}
+									x={x * 48}
+									y={y * 48}
 									topWall={cell.topWall}
 									rightWall={cell.rightWall}
 									bottomWall={cell.bottomWall}
 									leftWall={cell.leftWall}
+									fill={cell.fill}
 								/>
 							})
 						}
@@ -68,6 +138,7 @@ interface CellGen {
 	bottomWall: boolean;
 	leftWall: boolean;
 	visited: boolean;
+	fill: boolean
 }
 
 function generateMaze(width: number, height: number): CellGen[][] {
@@ -80,7 +151,8 @@ function generateMaze(width: number, height: number): CellGen[][] {
 				rightWall: true,
 				bottomWall: true,
 				leftWall: true,
-				visited: false
+				visited: false,
+				fill: false
 			}
 		}
 	}
@@ -134,7 +206,59 @@ function generateMaze(width: number, height: number): CellGen[][] {
 		maze[current.y][current.x].visited = true
 	}
 
+	
 	return maze
 }
+
+// --------------------------------------------------
+
+  
+//   function bfs(maze: CellGen[][], start: Node, end: Node): Node[] | null {
+// 	const queue: Node[] = [start];
+// 	const visited: Set<string> = new Set();
+// 	const parents: Record<string, Node> = {};
+  
+// 	while (queue.length > 0) {
+// 	  const current = queue.shift()!;
+// 	  if (current.x === end.x && current.y === end.y) {
+// 		// reconstruir el camino
+// 		const path: Node[] = [end];
+// 		let node = end;
+// 		while (node.x !== start.x || node.y !== start.y) {
+// 		  node = parents[`${node.x},${node.y}`];
+// 		  path.unshift(node);
+// 		}
+// 		return path;
+// 	  }
+// 	  const neighbors: Node[] = [];
+// 	  if (!maze[current.y][current.x].topWall) {
+// 		neighbors.push({ x: current.x, y: current.y - 1 });
+// 	  }
+// 	  if (!maze[current.y][current.x].rightWall) {
+// 		neighbors.push({ x: current.x + 1, y: current.y });
+// 	  }
+// 	  if (!maze[current.y][current.x].bottomWall) {
+// 		neighbors.push({ x: current.x, y: current.y + 1 });
+// 	  }
+// 	  if (!maze[current.y][current.x].leftWall) {
+// 		neighbors.push({ x: current.x - 1, y: current.y });
+// 	  }
+// 	  for (const neighbor of neighbors) {
+// 		const key = `${neighbor.x},${neighbor.y}`;
+// 		if (!visited.has(key)) {
+// 		  queue.push(neighbor);
+// 		  visited.add(key);
+// 		  parents[key] = current;
+// 		}
+// 	  }
+// 	}
+  
+// 	return null;
+//   }
+  
+  // Ejemplo de uso:
+//   const path = bfs(maze, start, end);
+//   console.log(path);
+// --------------------------------------------------
 
 export default Maze

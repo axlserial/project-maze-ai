@@ -1,7 +1,8 @@
 #maze {
-	width: 1280px;
-	height: 620px;
-	margin: 0 auto;
-	border: 4px solid rgba(255, 255, 255, 0.8);
+	display: inline-block;
+	width: 720px;
+	height: 720px;
 	border-radius: 6px;
+	margin-top: 20px;
+	margin-right: 20px;
 }
