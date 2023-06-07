@@ -24,60 +24,60 @@ const Cell = ({
 
 	const fillCellDraw = useCallback((g: PixiGraphics) => {
 		g.lineStyle(0)
-		g.beginFill(0x0a9f31)
+		g.beginFill(0xc1e2f7)
 		g.drawRect(x, y, cellSize, cellSize)
 		g.endFill()
 	}, [])
 
 	const topWallDraw = useCallback((g: PixiGraphics) => {
 		// Wall
-		g.lineStyle(8, 0x99ccff)
+		g.lineStyle(8, 0x4A4B5C)
 		g.moveTo(x, y)
 		g.lineTo(cellSize + x, y)
 		g.closePath()
 
 		// Border radius
 		g.lineStyle(0)
-		g.beginFill(0x99ccff)
+		g.beginFill(0x4A4B5C)
 		g.drawCircle(x, y, 4)
 		g.drawCircle(cellSize + x, y, 4)
 		g.endFill()
 	}, [])
 
 	const rightWallDraw = useCallback((g: PixiGraphics) => {
-		g.lineStyle(8, 0x99ccff)
+		g.lineStyle(8, 0x4A4B5C)
 		g.moveTo(cellSize + x, y)
 		g.lineTo(cellSize + x, cellSize + y)
 		g.closePath()
 
 		g.lineStyle(0)
-		g.beginFill(0x99ccff)
+		g.beginFill(0x4A4B5C)
 		g.drawCircle(cellSize + x, y, 4)
 		g.drawCircle(cellSize + x, cellSize + y, 4)
 		g.endFill()
 	}, [])
 
 	const bottomWallDraw = useCallback((g: PixiGraphics) => {
-		g.lineStyle(8, 0x99ccff)
+		g.lineStyle(8, 0x4A4B5C)
 		g.moveTo(cellSize + x, cellSize + y)
 		g.lineTo(x, cellSize + y)
 		g.closePath()
 
 		g.lineStyle(0)
-		g.beginFill(0x99ccff)
+		g.beginFill(0x4A4B5C)
 		g.drawCircle(cellSize + x, cellSize + y, 4)
 		g.drawCircle(x, cellSize + y, 4)
 		g.endFill()
 	}, [])
 
 	const leftWallDraw = useCallback((g: PixiGraphics) => {
-		g.lineStyle(8, 0x99ccff)
+		g.lineStyle(8, 0x4A4B5C)
 		g.moveTo(x, cellSize + y)
 		g.lineTo(x, y)
 		g.closePath()
 
 		g.lineStyle(0)
-		g.beginFill(0x99ccff)
+		g.beginFill(0x4A4B5C)
 		g.drawCircle(x, cellSize + y, 4)
 		g.drawCircle(x, y, 4)
 		g.endFill()

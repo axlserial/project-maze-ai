@@ -1,13 +1,15 @@
 import { useState } from "react"
 import "./App.css"
 import Maze from "./components/Maze"
+import Timer from "./components/timer"
 
 const App = () => {
 	const [generateSelected, setGenerateSelected] = useState(false)
 	const [solveSelected, setSolveSelected] = useState(false)
 
+
 	return (
-		<>
+		<div id="bg">
 			<header>
 				<h1>Resolución de Laberinto</h1>
 				<ul>
@@ -27,6 +29,10 @@ const App = () => {
 							Resolver
 						</button>
 					</li>
+					<li>
+						<Timer solveSelected={solveSelected}
+						generateSelected = {generateSelected} />
+					</li>
 				</ul>
 			</header>
 
@@ -36,7 +42,7 @@ const App = () => {
 				solveSelected={solveSelected}
 				setSolveSelected={setSolveSelected}
 			/>
-		</>
+		</div>
 	)
 }
 

@@ -1,0 +1,15 @@
+
+#timer{
+    width: 100%;
+    text-align: center;
+    font-size: 60px;
+    background-color: #c1e2f7;
+    padding: 20%;
+    border-radius: 6px;
+}
+
+#texto{
+    font-size: 20px;
+    font-weight: 480;
+    color: #4A4B5C;
+}
