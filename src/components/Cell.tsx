@@ -24,7 +24,7 @@ const Cell = ({
 
 	const fillCellDraw = useCallback((g: PixiGraphics) => {
 		g.lineStyle(0)
-		g.beginFill(0x99ccff)
+		g.beginFill(0x0a9f31)
 		g.drawRect(x, y, cellSize, cellSize)
 		g.endFill()
 	}, [])

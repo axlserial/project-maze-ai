@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Stage, Container, Sprite } from "@pixi/react"
 import bee from "../assets/chill.png"
 import flowers from "../assets/flowers.png"
@@ -64,7 +64,7 @@ function generateMaze(width: number, height: number): CellGen[][] {
 	// Barajar los bordes aleatoriamente
 	for (let i = edges.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1))
-		;[edges[i], edges[j]] = [edges[j], edges[i]]
+			;[edges[i], edges[j]] = [edges[j], edges[i]]
 	}
 
 	const disjointSet: number[][] = []
@@ -145,6 +145,26 @@ const Maze = (props: Props) => {
 	const [beeCoords, setBeeCoords] = useState({ x: 0, y: 0 })
 	const [maze, setMaze] = useState<CellGen[][]>([])
 
+	const moveBee = useMemo(() => (x: number, y: number) => {
+		let xMovement = 0
+		let yMovement = 0
+		if (x - beeCoords.x != 0) {
+			xMovement = x / Math.abs(x)
+		} else if (y - beeCoords.y != 0) {
+			yMovement = y / Math.abs(y)
+		}
+		let movements = 0
+		/* const idInterval = setInterval(() => {
+			movements++
+			setBeeCoords({ x: beeCoords.x + xMovement * 48 / 200, y: beeCoords.y + yMovement * 48 / 200 })
+			if (movements === 200) {
+				clearInterval(idInterval)
+			}
+		}, 1) */
+		setBeeCoords({ x, y })
+
+	}, [beeCoords])
+
 	useEffect(() => {
 		const generated = generateMaze(15, 15)
 		setMaze(generated)
@@ -203,14 +223,18 @@ const Maze = (props: Props) => {
 				const intervalId = setInterval(() => {
 					if (index === path.length) {
 						// Se pone a la abeja en la celda de destino
-						setBeeCoords({ x: 14 * 48, y: 14 * 48 })
+						moveBee(14 * 48, 14 * 48)
 						clearInterval(intervalId)
 						setSolveSelected(false)
 						return
 					}
 
 					const { x, y } = path[index]
-					setBeeCoords({ x: x * 48, y: y * 48 })
+					moveBee(x * 48, y * 48)
+
+					const newMaze = [...maze]
+					newMaze[y][x].fill = true
+					setMaze(newMaze)
 					index++
 				}, 200)
 
@@ -262,19 +286,6 @@ const Maze = (props: Props) => {
 				}}
 			>
 				<Container>
-					<Sprite
-						image={flowers}
-						scale={{ x: 0.25, y: 0.25 }}
-						x={14 * 48}
-						y={14 * 48}
-					/>
-					
-					<Sprite
-						image={bee}
-						scale={{ x: 0.25, y: 0.25 }}
-						x={beeCoords.x}
-						y={beeCoords.y}
-					/>
 					{maze.map((row, y) => {
 						return row.map((cell, x) => {
 							return (
@@ -291,6 +302,20 @@ const Maze = (props: Props) => {
 							)
 						})
 					})}
+
+					<Sprite
+						image={flowers}
+						scale={{ x: 0.25, y: 0.25 }}
+						x={14 * 48}
+						y={14 * 48}
+					/>
+
+					<Sprite
+						image={bee}
+						scale={{ x: 0.25, y: 0.25 }}
+						x={beeCoords.x}
+						y={beeCoords.y}
+					/>
 				</Container>
 			</Stage>
 		</section>
