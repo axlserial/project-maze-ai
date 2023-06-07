@@ -9,7 +9,7 @@ const App = () => {
 
 
 	return (
-		<div id="bg">
+		<>
 			<header>
 				<h1>Resolución de Laberinto</h1>
 				<ul>
@@ -31,7 +31,7 @@ const App = () => {
 					</li>
 					<li>
 						<Timer solveSelected={solveSelected}
-						generateSelected = {generateSelected} />
+							generateSelected={generateSelected} />
 					</li>
 				</ul>
 			</header>
@@ -42,7 +42,7 @@ const App = () => {
 				solveSelected={solveSelected}
 				setSolveSelected={setSolveSelected}
 			/>
-		</div>
+		</>
 	)
 }
 
